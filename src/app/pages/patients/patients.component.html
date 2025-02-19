@@ -1,0 +1,24 @@
+<div class="container">
+  <h2>Lista Pazienti</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Cognome</th>
+        <th>Azioni</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let patient of patients">
+        <td>{{ patient.id }}</td>
+        <td>{{ patient.name }}</td>
+        <td>{{ patient.surname }}</td>
+        <td>
+          <button class="btn btn-info">Modifica</button>
+          <button class="btn btn-danger">Elimina</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

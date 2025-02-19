@@ -1,0 +1,17 @@
+<div class="container">
+  <h2>Dettaglio Paziente</h2>
+
+  <div *ngIf="patient">
+    <p><strong>ID:</strong> {{ patient.id }}</p>
+    <p><strong>Nome:</strong> {{ patient.name }}</p>
+    <p><strong>Cognome:</strong> {{ patient.surname }}</p>
+    <p><strong>Data di Nascita:</strong> {{ patient.birthdate }}</p>
+    <p><strong>Note Mediche:</strong> {{ patient.medicalNotes }}</p>
+
+    <button class="btn btn-secondary" (click)="goBack()">Indietro</button>
+  </div>
+
+  <div *ngIf="!patient">
+    <p>Caricamento in corso...</p>
+  </div>
+</div>
