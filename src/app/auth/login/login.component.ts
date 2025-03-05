@@ -1,33 +1,31 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-
-import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  imports: [FormsModule, CommonModule], 
 })
 export class LoginComponent {
-  email = '';
-  password = '';
+  credentials = { email: '', password: '' };
+  errorMessage = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
   login() {
-    this.authService
-      .login({ email: this.email, password: this.password })
-      .subscribe({
-        next: (res) => {
-          localStorage.setItem('token', res.token);
-          this.router.navigate(['/dashboard']); // Reindirizza alla dashboard dopo il login
-        },
-        error: (err) => console.error('Errore login:', err),
-      });
+    this.authService.login(this.credentials).subscribe(
+      (response) => {
+        if (response.token) {
+          this.authService.saveToken(response.token);
+          this.authService.saveUserRole(response.role); // Salva il ruolo
+
+          this.router.navigate(['/home']); // Reindirizza alla dashboard
+        }
+      },
+      (error) => {
+        this.errorMessage = 'Email o password errati';
+      }
+    );
   }
 }

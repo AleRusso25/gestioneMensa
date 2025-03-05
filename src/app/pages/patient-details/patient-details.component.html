@@ -1,17 +1,75 @@
-<div class="container">
-  <h2>Dettaglio Paziente</h2>
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Dettagli Paziente</h2>
 
-  <div *ngIf="patient">
-    <p><strong>ID:</strong> {{ patient.id }}</p>
-    <p><strong>Nome:</strong> {{ patient.name }}</p>
-    <p><strong>Cognome:</strong> {{ patient.surname }}</p>
-    <p><strong>Data di Nascita:</strong> {{ patient.birthdate }}</p>
-    <p><strong>Note Mediche:</strong> {{ patient.medicalNotes }}</p>
-
-    <button class="btn btn-secondary" (click)="goBack()">Indietro</button>
+  <div *ngIf="errorMessage" class="alert alert-danger text-center">
+    {{ errorMessage }}
   </div>
 
-  <div *ngIf="!patient">
-    <p>Caricamento in corso...</p>
+  <div *ngIf="patient">
+    <div class="card shadow-lg">
+      <div class="card-header bg-primary text-white d-flex justify-content-between">
+        <h4 class="mb-0">{{ patient.name }} {{ patient.surname }}</h4>
+        <span class="badge bg-light text-dark">Età: {{ patient.age }}</span>
+      </div>
+      <div class="card-body">
+        <p><strong>Dieta:</strong> <span class="badge bg-success">{{ patient.dietType }}</span></p>
+      </div>
+    </div>
+
+    <!-- Tabella Pasti -->
+    <div class="card shadow-lg mt-4">
+      <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">🍽️ Pasti Assegnati</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Tipo</th>
+              <th>Descrizione</th>
+              <th>Data</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let meal of meals">
+              <ng-container *ngIf="editingMeal?.id === meal.id; else viewMode">
+                <td>
+                  <select [(ngModel)]="editingMeal.type" class="form-select">
+                    <option>Colazione</option>
+                    <option>Pranzo</option>
+                    <option>Cena</option>
+                    <option>Spuntino</option>
+                  </select>
+                </td>
+                <td><input [(ngModel)]="editingMeal.description" class="form-control"></td>
+                <td><input type="date" [(ngModel)]="editingMeal.date" class="form-control"></td>
+                <td>
+                  <button class="btn btn-success btn-sm" (click)="saveMeal()">💾 Salva</button>
+                  <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">❌ Annulla</button>
+                </td>
+              </ng-container>
+
+              <ng-template #viewMode>
+                <td><span class="badge bg-info text-dark">{{ meal.type }}</span></td>
+                <td>{{ meal.description }}</td>
+                <td>{{ meal.date }}</td>
+                <td>
+                  <button class="btn btn-warning btn-sm" (click)="editMeal(meal)">✏️ Modifica</button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteMeal(meal.id)">🗑️ Elimina</button>
+                </td>
+              </ng-template>
+            </tr>
+          </tbody>
+        </table>
+
+        <p *ngIf="meals.length === 0" class="text-muted text-center mt-3">Nessun pasto assegnato.</p>
+      </div>
+    </div>
+
+    <!-- Pulsante Indietro -->
+    <div class="mt-4 text-center">
+      <button class="btn btn-secondary" (click)="goBack()">🔙 Torna alla lista</button>
+    </div>
   </div>
 </div>

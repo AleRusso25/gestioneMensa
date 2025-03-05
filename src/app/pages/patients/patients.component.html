@@ -1,24 +1,56 @@
-<div class="container">
-  <h2>Lista Pazienti</h2>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Cognome</th>
-        <th>Azioni</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let patient of patients">
-        <td>{{ patient.id }}</td>
-        <td>{{ patient.name }}</td>
-        <td>{{ patient.surname }}</td>
-        <td>
-          <button class="btn btn-info">Modifica</button>
-          <button class="btn btn-danger">Elimina</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Elenco Pazienti</h2>
+
+  <!-- Barra di ricerca -->
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="🔍 Cerca paziente per nome, cognome o dieta..."
+      [(ngModel)]="searchText"
+      (input)="filterPatients()"
+    />
+  </div>
+
+  <!-- Messaggio in caso di errori -->
+  <div *ngIf="errorMessage" class="alert alert-danger text-center">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Tabella Bootstrap migliorata -->
+  <div class="card shadow-lg">
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead class="table-primary">
+          <tr>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Età</th>
+            <th>Data Ricovero</th>
+            <th>Data Dimissione</th>
+            <th>Dieta</th>
+            <th>Dettagli</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let patient of filteredPatients">
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.surname }}</td>
+            <td>{{ patient.age }}</td>
+            <td>{{ patient.admissionDate }}</td>
+            <td>{{ patient.dischargeDate || 'Ancora ricoverato' }}</td>
+            <td><span class="badge bg-success">{{ patient.dietType }}</span></td>
+            <td>
+              <a [routerLink]="['/patients', patient.id]" class="btn btn-info btn-sm">🔍 Vedi</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Messaggio se nessun paziente viene trovato -->
+      <p *ngIf="filteredPatients.length === 0" class="text-muted text-center mt-3">
+        Nessun paziente trovato.
+      </p>
+    </div>
+  </div>
 </div>
